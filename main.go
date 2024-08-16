@@ -12,7 +12,7 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/hello", handlers.HelloHandler).Methods(http.MethodGet)
-	r.HandleFunc("/article/1", handlers.GetArticleHandler).Methods(http.MethodGet)
+	r.HandleFunc("/article/{id:[0-9]+}", handlers.GetArticleHandler).Methods(http.MethodGet)
 	r.HandleFunc("/article/list", handlers.GetArticleListHandler).Methods(http.MethodGet)
 	r.HandleFunc("/article", handlers.PostArticleHandler).Methods(http.MethodPost)
 	r.HandleFunc("/article/nice", handlers.PostNiceHandler).Methods(http.MethodGet)
