@@ -11,12 +11,12 @@ import (
 func main() {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/hello", handlers.HelloHandler)
-	r.HandleFunc("/article/1", handlers.GetArticleHandler)
-	r.HandleFunc("/article/list", handlers.GetArticleListHandler)
-	r.HandleFunc("/article", handlers.PostArticleHandler)
-	r.HandleFunc("/article/nice", handlers.PostNiceHandler)
-	r.HandleFunc("/comment", handlers.PostCommentHandler)
+	r.HandleFunc("/hello", handlers.HelloHandler).Methods(http.MethodGet)
+	r.HandleFunc("/article/1", handlers.GetArticleHandler).Methods(http.MethodGet)
+	r.HandleFunc("/article/list", handlers.GetArticleListHandler).Methods(http.MethodGet)
+	r.HandleFunc("/article", handlers.PostArticleHandler).Methods(http.MethodPost)
+	r.HandleFunc("/article/nice", handlers.PostNiceHandler).Methods(http.MethodGet)
+	r.HandleFunc("/comment", handlers.PostCommentHandler).Methods(http.MethodPost)
 
 	log.Println("server start at port 8080")
 	// http.ListenAndServe関数の第二引数にはサーバの中で使うルータを指定する
