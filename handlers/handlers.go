@@ -2,9 +2,14 @@ package handlers
 
 import (
 	"encoding/json"
-	"go-kn-myapi/models"
 	"io"
 	"net/http"
+	"strconv"
+
+	"go-kn-myapi/models"
+	"go-kn-myapi/services"
+
+	"github.com/gorilla/mux"
 )
 
 func HelloHandler(w http.ResponseWriter, req *http.Request) {
@@ -12,7 +17,18 @@ func HelloHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func GetArticleHandler(w http.ResponseWriter, req *http.Request) {
-	article := models.Article1
+	articleID, err := strconv.Atoi(mux.Vars(req)["id"])
+	if err != nil {
+		http.Error(w, "Invalid query parameter", http.StatusBadRequest)
+		return
+	}
+
+	article, err := services.GetArticleService(articleID)
+	if err != nil {
+		http.Error(w, "Fail internal exec\n", http.StatusInternalServerError)
+		return
+	}
+
 	json.NewEncoder(w).Encode(article)
 }
 
