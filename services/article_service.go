@@ -1,28 +1,18 @@
 package services
 
 import (
-	"fmt"
 	"go-kn-myapi/models"
 	"go-kn-myapi/repositories"
 )
 
-func GetArticleService(articleID int) (models.Article, error) {
-	db, err := connectDB()
+func (s *MyAppService) GetArticleService(articleID int) (models.Article, error) {
+	article, err := repositories.SelectArticleDetail(s.db, articleID)
 	if err != nil {
-		fmt.Println(err)
-		return models.Article{}, err
-	}
-	defer db.Close()
-
-	article, err := repositories.SelectArticleDetail(db, articleID)
-	if err != nil {
-		fmt.Println(err)
 		return models.Article{}, err
 	}
 
-	commentList, err := repositories.SelectCommentList(db, articleID)
+	commentList, err := repositories.SelectCommentList(s.db, articleID)
 	if err != nil {
-		fmt.Println(err)
 		return models.Article{}, err
 	}
 
@@ -31,31 +21,17 @@ func GetArticleService(articleID int) (models.Article, error) {
 	return article, nil
 }
 
-func GetArticleListService(page int) ([]models.Article, error) {
-	db, err := connectDB()
-	if err != nil {
-		fmt.Println(err)
-		return []models.Article{}, err
-	}
-	defer db.Close()
-
-	article, err := repositories.SelectArticleList(db, page)
+func (s *MyAppService) GetArticleListService(page int) ([]models.Article, error) {
+	articleArray, err := repositories.SelectArticleList(s.db, page)
 	if err != nil {
 		return []models.Article{}, err
 	}
 
-	return article, nil
+	return articleArray, nil
 }
 
-func PostArticleService(article models.Article) (models.Article, error) {
-	db, err := connectDB()
-	if err != nil {
-		fmt.Println(err)
-		return models.Article{}, err
-	}
-	defer db.Close()
-
-	newArticle, err := repositories.InsertArticle(db, article)
+func (s *MyAppService) PostArticleService(article models.Article) (models.Article, error) {
+	newArticle, err := repositories.InsertArticle(s.db, article)
 	if err != nil {
 		return models.Article{}, err
 	}
@@ -63,14 +39,8 @@ func PostArticleService(article models.Article) (models.Article, error) {
 	return newArticle, nil
 }
 
-func PostNiceService(article models.Article) (models.Article, error) {
-	db, err := connectDB()
-	if err != nil {
-		fmt.Println(err)
-		return models.Article{}, err
-	}
-
-	err = repositories.UpdateNiceNum(db, article.ID)
+func (s *MyAppService) PostNiceService(article models.Article) (models.Article, error) {
+	err := repositories.UpdateNiceNum(s.db, article.ID)
 	if err != nil {
 		return models.Article{}, err
 	}

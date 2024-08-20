@@ -33,7 +33,26 @@ func GetArticleHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func GetArticleListHandler(w http.ResponseWriter, req *http.Request) {
-	articleList := []models.Article{models.Article1, models.Article2}
+	queryMap := req.URL.Query()
+
+	var page int
+	if p, ok := queryMap["page"]; ok && len(p) > 0 {
+		var err error
+		page, err = strconv.Atoi(p[0])
+		if err != nil {
+			http.Error(w, "Invalid query parameter", http.StatusBadRequest)
+			return
+		}
+	} else {
+		page = 1
+	}
+
+	articleList, err := services.GetArticleListService(page)
+	if err != nil {
+		http.Error(w, "Fail internal exec\n", http.StatusInternalServerError)
+		return
+	}
+
 	json.NewEncoder(w).Encode(articleList)
 }
 
@@ -42,7 +61,13 @@ func PostArticleHandler(w http.ResponseWriter, req *http.Request) {
 	if err := json.NewDecoder(req.Body).Decode(&reqArticle); err != nil {
 		http.Error(w, "fail to decode json\n", http.StatusBadRequest)
 	}
-	article := reqArticle
+
+	article, err := services.PostArticleService(reqArticle)
+	if err != nil {
+		http.Error(w, "Fail internal exec\n", http.StatusInternalServerError)
+		return
+	}
+
 	json.NewEncoder(w).Encode(article)
 }
 
@@ -52,7 +77,13 @@ func PostNiceHandler(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		http.Error(w, "fail to decode json\n", http.StatusInternalServerError)
 	}
-	article := reqArticle
+
+	article, err := services.PostNiceService(reqArticle)
+	if err != nil {
+		http.Error(w, "Fail internal exec\n", http.StatusInternalServerError)
+		return
+	}
+
 	json.NewEncoder(w).Encode(article)
 }
 
@@ -62,6 +93,12 @@ func PostCommentHandler(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		http.Error(w, "fail to decode json\n", http.StatusInternalServerError)
 	}
-	comment := reqComment
+
+	comment, err := services.PostCommentServices(reqComment)
+	if err != nil {
+		http.Error(w, "Fail internal exec\n", http.StatusInternalServerError)
+		return
+	}
+
 	json.NewEncoder(w).Encode(comment)
 }
