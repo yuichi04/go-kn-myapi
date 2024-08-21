@@ -79,6 +79,22 @@ func (c *MyAppController) PostArticleHandler(w http.ResponseWriter, req *http.Re
 	json.NewEncoder(w).Encode(newArticle)
 }
 
+func (c *MyAppController) PostNiceHandler(w http.ResponseWriter, req *http.Request) {
+	var reqArticle models.Article
+	if err := json.NewDecoder(req.Body).Decode(&reqArticle); err != nil {
+		http.Error(w, "Fail to decode json\n", http.StatusInternalServerError)
+		return
+	}
+
+	article, err := c.service.PostNiceService(reqArticle)
+	if err != nil {
+		http.Error(w, "Fail to internal exec\n", http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(article)
+}
+
 func (c *MyAppController) PostCommentHandler(w http.ResponseWriter, req *http.Request) {
 	var reqComment models.Comment
 	if err := json.NewDecoder(req.Body).Decode(&reqComment); err != nil {
