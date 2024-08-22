@@ -8,9 +8,8 @@ import (
 	"os"
 
 	"go-kn-myapi/controllers"
+	"go-kn-myapi/routers"
 	"go-kn-myapi/services"
-
-	"github.com/gorilla/mux"
 )
 
 var (
@@ -29,15 +28,7 @@ func main() {
 	}
 	s := services.NewMyAppService(db)
 	c := controllers.NewMyAppController(s)
-
-	r := mux.NewRouter()
-
-	r.HandleFunc("/hello", controllers.HelloHandler).Methods(http.MethodGet)
-	r.HandleFunc("/article/{id:[0-9]+}", c.GetArticleHandler).Methods(http.MethodGet)
-	r.HandleFunc("/article/list", c.GetArticleListHandler).Methods(http.MethodGet)
-	r.HandleFunc("/article", c.PostArticleHandler).Methods(http.MethodPost)
-	r.HandleFunc("/article/nice", c.PostNiceHandler).Methods(http.MethodPost)
-	r.HandleFunc("/comment", c.PostCommentHandler).Methods(http.MethodPost)
+	r := routers.NewRouter(c)
 
 	log.Println("server start at port 8080")
 	// http.ListenAndServe関数の第二引数にはサーバの中で使うルータを指定する
