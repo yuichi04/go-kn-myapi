@@ -9,6 +9,7 @@ import (
 
 func NewRouter(c *controllers.MyAppController) *mux.Router {
 	r := mux.NewRouter()
+
 	r.HandleFunc("/hello", controllers.HelloHandler).Methods(http.MethodGet)
 	r.HandleFunc("/article", c.PostArticleHandler).Methods(http.MethodGet)
 	r.HandleFunc("/article/list", c.GetArticleListHandler).Methods(http.MethodGet)
