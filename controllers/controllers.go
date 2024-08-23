@@ -102,7 +102,7 @@ func (c *MyAppController) PostCommentHandler(w http.ResponseWriter, req *http.Re
 		return
 	}
 
-	newComment, err := c.service.PostCommentServices(reqComment)
+	newComment, err := c.service.PostCommentService(reqComment)
 	if err != nil {
 		http.Error(w, "Fail to internal exec\n", http.StatusInternalServerError)
 		return
