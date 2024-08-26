@@ -7,9 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"go-kn-myapi/controllers"
-	"go-kn-myapi/routers"
-	"go-kn-myapi/services"
+	"go-kn-myapi/api"
 )
 
 var (
@@ -26,9 +24,7 @@ func main() {
 		log.Println("Fail to connect DB")
 		return
 	}
-	s := services.NewMyAppService(db)
-	c := controllers.NewMyAppController(s)
-	r := routers.NewRouter(c)
+	r := api.NewRouter(db)
 
 	log.Println("server start at port 8080")
 	// http.ListenAndServe関数の第二引数にはサーバの中で使うルータを指定する
